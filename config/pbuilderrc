@@ -17,7 +17,7 @@ COMPONENTS="main restricted universe multiverse"
 # Enable security and updates repos
 if [ "$DIST" == "precise" ]; then
     OTHERMIRROR="deb $MIRRORSITE $DIST-updates $COMPONENTS|deb $MIRRORSITE $DIST-security $COMPONENTS|deb [trusted=yes] http://ppa.launchpad.net/ubuntu-cloud-archive/$OPEN_STACK-staging/ubuntu $DIST main"
-elif [ "$DIST" == "trusty" ]; then
+else
     OTHERMIRROR="deb $MIRRORSITE $DIST-security $COMPONENTS|deb $MIRRORSITE $DIST-updates $COMPONENTS|deb [trusted=yes] http://ppa.launchpad.net/ubuntu-cloud-archive/$OPEN_STACK-staging/ubuntu $DIST main"
 fi
 ALLOWUNTRUSTED=yes
