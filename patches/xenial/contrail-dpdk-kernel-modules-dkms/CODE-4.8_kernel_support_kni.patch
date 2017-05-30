@@ -1,0 +1,34 @@
+--- a/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/compat.h
++++ b/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/compat.h
+@@ -27,3 +27,7 @@
+ #if ( LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0) )
+ #define HAVE_KIOCB_MSG_PARAM
+ #endif /* < 4.1.0 */
++
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 7, 0)
++#define HAVE_TRANS_START_HELPER
++#endif
+--- a/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/kni_net.c
++++ b/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/kni_net.c
+@@ -39,6 +39,7 @@
+ #include <rte_config.h>
+ #include <exec-env/rte_kni_common.h>
+ #include <kni_fifo.h>
++#include "compat.h"
+ #include "kni_dev.h"
+ 
+ #define WD_TIMEOUT 5 /*jiffies */
+@@ -397,7 +398,12 @@
+ 	struct rte_kni_mbuf *pkt_kva = NULL;
+ 	struct rte_kni_mbuf *pkt_va = NULL;
+ 
+-	dev->trans_start = jiffies; /* save the timestamp */
++       /* save the timestamp */
++#ifdef HAVE_TRANS_START_HELPER
++       netif_trans_update(dev);
++#else
++       dev->trans_start = jiffies;
++#endif
+ 
+ 	/* Check if the length of skb is less than mbuf size */
+ 	if (skb->len > kni->mbuf_size)
