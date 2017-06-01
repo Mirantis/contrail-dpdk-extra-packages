@@ -119,10 +119,12 @@ done
 for name in $pkgs; do
     src_dir=$(get_src_dir $name)
 
+    buildtimestamp=$(date -d @$(date +%s) +'%Y%m%d%H%M%S')
     # Apply the DEBIAN-* pathes
     patches=$(ls "${PATCHES_DIR}/${DIST}/${name}/DEBIAN-"*.patch 2>/dev/null)
     for patch in $patches; do
         patch=$(readlink -e $patch)
+        sed -i "s/PACKAGEVERSION/${buildtimestamp}/g" $patch
         run_in_dir $src_dir patch -N -p1 < $patch
         #run "(cd $src_dir && patch -N -p1 < $patch)"
     done
