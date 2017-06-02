@@ -3,12 +3,26 @@ index 8a5fc3d..6bda496 100755
 --- a/debian/changelog
 +++ b/debian/changelog
 @@ -1,3 +1,9 @@
-+contrail-dpdk-kernel-modules-dkms (2.1.1~PACKAGEVERSION) stable; urgency=medium
++contrail-dpdk-kernel-modules-dkms (2.1.2.0~BUILDTIMESTAMP) stable; urgency=medium
 +
-+  * Update package
++  * Fix for newer kernel
 +
 + -- chnyda <chnyda@mirantis.com>  Thu, 01 Jun 2017 14:53:25 +0200
 +
  contrail-dpdk-kernel-modules-dkms (2.1.1) stable; urgency=low
  
    * Compilation fix for kernel 4.3 and above 
+-- 
+diff --git a/debian/rules b/debian/rules
+index d8ab207..bb030be 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -6,7 +6,7 @@
+ DEB_NAME=contrail-dpdk-kernel-modules
+ NAME=contrail-dpdk-kernel-modules
+-VERSION=$(shell sed -rne "1 s/.*\((.*)\).*/\1/p" debian/changelog)
++VERSION=2.1.1
+ 
+ %:
+ 	dh $@
+y
