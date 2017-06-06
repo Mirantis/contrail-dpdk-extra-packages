@@ -115,7 +115,6 @@ for name in $pkgs; do
     run dpkg-source -x $dsc
 done
 
-buildtimestamp=$(date -d @$(date +%s) +'%Y%m%d%H%M%S')
 # Apply patches
 for name in $pkgs; do
     src_dir=$(get_src_dir $name)
@@ -124,7 +123,6 @@ for name in $pkgs; do
     patches=$(ls "${PATCHES_DIR}/${DIST}/${name}/DEBIAN-"*.patch 2>/dev/null)
     for patch in $patches; do
         patch=$(readlink -e $patch)
-        sed -i "s/BUILDTIMESTAMP/${buildtimestamp}/g" $patch
         run_in_dir $src_dir patch -N -p1 < $patch
         #run "(cd $src_dir && patch -N -p1 < $patch)"
     done
@@ -142,9 +140,11 @@ done
 # Build packages
 for name in $pkgs; do
     src_dir=$(get_src_dir $name)
+
     conf=$(readlink -e "$PBUILDER_CONF")
     run mkdir -p "$BUILDRESULT"
     run rm -f "$BUILDRESULT/${name}_"*.deb
+
     run_in_dir $src_dir pdebuild --configfile $conf --use-pdebuild-internal
 done
 
