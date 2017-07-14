@@ -1,0 +1,40 @@
+From cd33f3a42ec97f1e6d4a0f3fe45043d01f462abd Mon Sep 17 00:00:00 2001
+From: Wojciech Zmuda <woz@semihalf.com>
+Date: Wed, 16 Dec 2015 13:34:21 +0100
+Subject: [PATCH] AF_PACKET fix.
+
+rte_eth_dev_allocate() called from rte_pmd_init_internals() allocates
+device and copies interface's name into eth_dev->data->name. Then,
+rte_pmd_init_internals() overwrites pointer to .data with another
+.data zmalloc'd before, with no .name set. Fix this by strncpy name
+into new data.
+
+Additionaly, fix printing NUMA node, when -1 is printed as uint.
+---
+ drivers/net/af_packet/rte_eth_af_packet.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/drivers/net/af_packet/rte_eth_af_packet.c b/drivers/net/af_packet/rte_eth_af_packet.c
+index bdd962867..1ec914c69 100644
+--- a/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/drivers/net/af_packet/rte_eth_af_packet.c
++++ b/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/drivers/net/af_packet/rte_eth_af_packet.c
+@@ -458,8 +458,8 @@ rte_pmd_init_internals(const char *name,
+ 	}
+ 
+ 	RTE_LOG(INFO, PMD,
+-		"%s: creating AF_PACKET-backed ethdev on numa socket %u\n",
+-		name, numa_node);
++		"%s: creating AF_PACKET-backed ethdev on numa socket %d\n",
++		name, (int)numa_node);
+ 
+ 	/*
+ 	 * now do all data allocation - for eth_dev structure, dummy pci driver
+@@ -668,6 +668,8 @@ rte_pmd_init_internals(const char *name,
+ 	data->nb_tx_queues = (uint16_t)nb_queues;
+ 	data->dev_link = pmd_link;
+ 	data->mac_addrs = &(*internals)->eth_addr;
++	strncpy(data->name,
++		(*eth_dev)->data->name, strlen((*eth_dev)->data->name));
+ 
+ 	pci_dev->numa_node = numa_node;
+ 
