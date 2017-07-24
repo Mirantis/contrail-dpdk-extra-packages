@@ -1,0 +1,22 @@
+--- a/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/ethtool/igb/igb_main.c
++++ b/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/ethtool/igb/igb_main.c
+@@ -76,7 +76,7 @@
+ static const char igb_copyright[] =
+ 				"Copyright (c) 2007-2013 Intel Corporation.";
+ 
+-static DEFINE_PCI_DEVICE_TABLE(igb_pci_tbl) = {
++const struct pci_device_id igb_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, E1000_DEV_ID_I354_BACKPLANE_1GBPS) },
+ 	{ PCI_VDEVICE(INTEL, E1000_DEV_ID_I354_SGMII) },
+ 	{ PCI_VDEVICE(INTEL, E1000_DEV_ID_I354_BACKPLANE_2_5GBPS) },
+--- a/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/ethtool/ixgbe/ixgbe_main.c
++++ b/contrail-dpdk-kernel-modules-2.1.1/dpdk-2.1.1/lib/librte_eal/linuxapp/kni/ethtool/ixgbe/ixgbe_main.c
+@@ -90,7 +90,7 @@
+  * { Vendor ID, Device ID, SubVendor ID, SubDevice ID,
+  *   Class, Class Mask, private data (not used) }
+  */
+-DEFINE_PCI_DEVICE_TABLE(ixgbe_pci_tbl) = {
++const struct pci_device_id ixgbe_pci_tbl[] = {
+ 	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_82598)},
+ 	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_82598AF_DUAL_PORT)},
+ 	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_82598AF_SINGLE_PORT)},
